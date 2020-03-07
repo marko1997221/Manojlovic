@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/basic.css">
+    <title>Document</title>
+</head>
+
+<body id="body1">
+    <div id="divhHeader" onmouseover="Vrati()"
+        style=" display: block; align-self: center; height: 95vh; transition:ease-in-out 1s ; margin:-0.6vw">
+        <h1><span style="font-size: larger;">A</span>UTO OGLASI</h1>
+        <div id="divDugmici"><button class="btn draw-border arj">O nama</button>
+            <button class="btn draw-border ">Kontakt</button></div>
+            
+    </div>
+
+    <div id="divNav" onmouseover="Prilagodi()" style="display: block;">
+        <a class="btn draw-border" style="display: block; text-align: center;" href="/dodaj.html">Dodaj oglas</a>
+    </div>
+    <div id="div1" style="display: flex;
+	align-items: flex-start;
+	flex-direction: row;
+	justify-content: space-around;
+	flex-wrap: wrap;
+    vertical-align: center;" onmouseover="Prilagodi()">
+    
+    </div>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        var divhHeader = document.getElementById("divhHeader");
+        var div1 = document.getElementById("div1");
+        var body1 = document.getElementById("body1");
+        var divDugmici = document.getElementById("divDugmici");
+        var nova = "";
+        function Dodaj() {
+            nova += `<div class="oglas"></div>`;
+            div1.innerHTML = nova;
+        }
+        function Prilagodi() {
+
+            divhHeader.style.height = "11vh";
+            divDugmici.style.visibility = `hidden`;
+            divDugmici.style.top = "2vh";
+
+
+        }
+        function Vrati() {
+            divhHeader.style.height = "95vh";
+            divDugmici.style.visibility = `visible`;
+            divDugmici.style.top = "75vh";
+
+        }
+        
+        
+      $(function () { 
+             VratiOglase();
+          });
+        function VratiOglase() {
+            var div = $("#div1")
+            var zahtev = $.getJSON("/Home/Vrati");
+            zahtev.done(function (Lista) {
+                for (const i in Lista) {
+                    div.append(`<div class="oglas">
+                        <form action="/index.html" method="get">
+                                <button class="btn" type="submit">   
+                                <input type="hidden" name="id" value="${Lista[i].autoId}">
+                                <img class="imgOglas" src="${Lista[i].fotografija}" alt="Greska">
+                                <div style="float: right; width:50%">
+                                <p>Naziv automobila: <b> ${Lista[i].marka + ' ' + Lista[i].model}</b></p>
+                                <p>Cena: <b>${Lista[i].cena} EUR</b></p>
+                                </div> 
+                            </button>
+                                </form>                     
+                            </div>`);
+                }
+                
+            });
+            zahtev.fail(function (gr) {
+                $("#div1").append(gr.statusText);
+              });
+
+        }
+
+
+
+    </script>
+</body>
+
+</html>
